@@ -10,9 +10,14 @@ import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
 
+/**
+ * @see Tron
+ * @author mbohnen
+ *
+ */
 @Remote(JobMasterControl.class)
 @Singleton
-@Startup
+//@Startup // activate only if u want to make it run automatically
 public class JobMasterControlBean extends AbstractJobTimer implements JobMasterControl {
 	
 	@Resource
@@ -26,11 +31,12 @@ public class JobMasterControlBean extends AbstractJobTimer implements JobMasterC
 
 	@Timeout
 	public void execute(Timer timer) {
-		System.out.println("going to work");	
+		// FIXME check system.properties for other timers to wake up
+		System.out.println("I should look for system.properties now ...");	
 	}
 	
-	@PostConstruct
+//	@PostConstruct // use only in case of @Startup
 	private void init() {
-		this.start(this.getClass().getSimpleName(), 2000);
+		this.start(2000);
 	}
 }

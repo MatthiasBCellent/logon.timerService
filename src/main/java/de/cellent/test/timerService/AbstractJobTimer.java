@@ -16,27 +16,30 @@ public abstract class AbstractJobTimer implements JobControl {
 	protected TimerService timerService;
 
 	protected TimerConfig timerConfig = new TimerConfig();
-	protected ScheduleExpression schedule; 
+	
+	protected ScheduleExpression schedule;
+
+	private Timer timer; 
 	
 	//implement this
 	@Timeout
 	public abstract void execute(Timer timer);
 	
-	public void start(String timerName, long interval) {
-		timerConfig.setInfo(timerName);
+	public void start(long interval) {
+		timerConfig.setInfo(this.getClass().getSimpleName());
 		timerConfig.setPersistent(false);
-		timerService.createIntervalTimer(new Date(System.currentTimeMillis()), interval, timerConfig);
+		timer = timerService.createIntervalTimer(new Date(System.currentTimeMillis()), interval, timerConfig);
 	}
 
-	public Collection<Timer> getAllTimers() {
+	public final Collection<Timer> getAllTimers() {
 		return this.timerService.getAllTimers();
 	}
 
-	public void stop(String timer) {
-		for (Timer t : timerService.getTimers()) {
-			if (t.getInfo().equals(timer)) {
-				t.cancel();
-			}
-		}
+	public void stop() {
+		this.timer.cancel();
+	}
+	
+	public String getTimerInfo() {
+		return timer.getInfo().toString();
 	}
 }
