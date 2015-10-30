@@ -21,6 +21,8 @@ public abstract class AbstractJobTimer implements JobControl {
 
 	private Timer timer; 
 	
+	private boolean running;
+	
 	//implement this
 	@Timeout
 	public abstract void execute(Timer timer);
@@ -29,6 +31,7 @@ public abstract class AbstractJobTimer implements JobControl {
 		timerConfig.setInfo(this.getClass().getSimpleName());
 		timerConfig.setPersistent(false);
 		timer = timerService.createIntervalTimer(new Date(System.currentTimeMillis()), interval, timerConfig);
+		this.running = true;
 	}
 
 	public final Collection<Timer> getAllTimers() {
@@ -37,9 +40,14 @@ public abstract class AbstractJobTimer implements JobControl {
 
 	public void stop() {
 		this.timer.cancel();
+		this.running = false;
 	}
 	
 	public String getTimerInfo() {
 		return timer.getInfo().toString();
 	}
+
+	public boolean isRunning() {
+		return running;
+	}	
 }

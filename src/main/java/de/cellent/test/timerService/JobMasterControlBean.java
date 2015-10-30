@@ -38,5 +38,5 @@ public class JobMasterControlBean extends AbstractJobTimer implements JobMasterC
 //	@PostConstruct // use only in case of @Startup
 	private void init() {
 		this.start(2000);
-	}
+	}	
 }
